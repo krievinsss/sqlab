@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="lv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b1120" />
+  <title>SQL Lab — Tava datubāzu laboratorija</title>
+  <meta name="description" content="Personīgas MySQL, PostgreSQL un SQLite datubāzes programmēšanas jauniešiem." />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <section id="auth" class="auth-shell hidden">
+    <div class="auth-intro">
+      <div class="logo lockup"><span class="logo-mark">{ }</span><span>SQL<span class="brand-light">LAB</span><small>CLASSROOM</small></span></div>
+      <span class="eyebrow">TAVA PERSONĪGĀ IZSTRĀDES VIDE</span>
+      <h1>Tavs nākamais<br><em>projekts</em> sākas šeit.</h1>
+      <p>Trīs SQL dzinēji. Tava datubāze. Īsti vaicājumi. Sāc no nulles un izstrādā projektu, kuru pats vari aizstāvēt.</p>
+      <div class="auth-features"><span>◉ MySQL</span><span>◉ PostgreSQL</span><span>◉ SQLite</span></div>
+      <div class="auth-ornament"><span>CREATE TABLE ideas (</span><span>  id INT PRIMARY KEY,</span><span>  potential TEXT NOT NULL</span><span>);</span></div>
+    </div>
+    <div class="auth-card">
+      <div class="mini-label">LAIPNI LŪDZAM</div>
+      <h2 id="auth-title">Pieslēgties laboratorijai</h2>
+      <p id="auth-desc" class="muted">Turpini darbu ar savu datubāzi.</p>
+      <form id="auth-form" autocomplete="on">
+        <div id="signup-fields" class="hidden">
+          <label>Vārds un uzvārds <input name="displayName" type="text" maxlength="90" placeholder="Jānis Bērziņš" /></label>
+          <label>Grupa <input name="classGroup" maxlength="40" placeholder="IPa24" /></label>
+          <label>Klases piekļuves kods <input name="classCode" type="password" placeholder="Ievadi skolotāja kodu" /></label>
+        </div>
+        <label>Lietotājvārds <input name="username" type="text" minlength="3" maxlength="30" required placeholder="janis.berzins" autocapitalize="off" /></label>
+        <label>Parole <input name="password" type="password" minlength="10" required placeholder="••••••••••" /></label>
+        <button class="btn primary full" type="submit" id="auth-submit">Pieslēgties <span>→</span></button>
+      </form>
+      <button type="button" id="auth-switch" class="text-button">Vēl nav konta? <strong>Izveidot kontu</strong></button>
+      <div class="auth-footnote">Skolotājs pieslēdzas šeit ar savu administratora kontu.</div>
+    </div>
+  </section>
+
+  <div id="shell" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="logo"><span class="logo-mark">{ }</span><span>SQL<span class="brand-light">LAB</span><small>CLASSROOM</small></span></div>
+      <div class="sidebar-section-title">DARBA VIDE</div>
+      <nav class="engine-nav" id="engine-nav">
+        <button data-engine="sqlite" class="engine-btn active"><span class="engine-icon sqlite-icon">S</span><span class="engine-title">SQLite<small>Pārlūka laboratorija</small></span><span class="engine-status" id="st-sqlite">●</span></button>
+        <button data-engine="postgres" class="engine-btn"><span class="engine-icon postgres-icon">P</span><span class="engine-title">PostgreSQL<small>Neon serveris</small></span><span class="engine-status" id="st-postgres">●</span></button>
+        <button data-engine="mysql" class="engine-btn"><span class="engine-icon mysql-icon">M</span><span class="engine-title">MySQL<small>Ārējais serveris</small></span><span class="engine-status" id="st-mysql">●</span></button>
+      </nav>
+      <div class="sidebar-section-title second">TAVS PROJEKTS</div>
+      <div class="sidebar-info" id="sidebar-info"><div class="pulse-dot"></div><span>Personīga darba vide</span></div>
+      <div class="sidebar-tip"><span class="tip-icon">✦</span><strong>Neliels atgādinājums</strong><p>Eksperimentē droši! Tavas tabulas ir nodalītas no pārējo jauniešu projektiem.</p></div>
+      <div class="sidebar-bottom"><div class="avatar" id="avatar">?</div><div class="profile"><strong id="profile-name">Skolēns</strong><small id="profile-group">Grupa</small></div><button class="icon-button" id="logout" title="Izrakstīties">⎋</button></div>
+    </aside>
+    <main class="workspace">
+      <div class="topbar"><div class="crumb">DARBA VIDE <span>/</span> <strong id="crumb-engine">SQLite</strong></div><div class="topbar-right"><span class="saved" id="saved-status">● Gatavs</span><button id="teacher-button" class="btn tiny outline hidden">Skolotāja panelis</button><span class="top-avatar" id="top-avatar">?</span></div></div>
+      <div id="student-view">
+        <header class="workspace-header"><div><span class="eyebrow">PERSONĪGĀ DATUBĀZE</span><h1><span id="engine-heading">SQLite</span> <span class="h1-muted">Workspace</span></h1><p id="engine-description">Tavs SQL redaktors. Raksti, pārbaudi, saglabā un turpini mācīties.</p></div><div class="header-actions"><button class="btn outline" id="export-sql">↓ Eksportēt SQL</button><button class="btn outline" id="sqlite-download">↓ SQLite fails</button></div></header>
+        <div id="not-configured" class="notice warning hidden"><strong>Šī laboratorija vēl nav pieslēgta.</strong><p>Skolotājam jānorāda ārējās DBVS servera piekļuves dati Vercel Environment Variables.</p></div>
+        <div id="provision-panel" class="notice info hidden"><strong>Tava personīgā datubāze vēl nav izveidota.</strong><p>Nospied pogu, lai serveris izveidotu atsevišķu darba vidi ar tavām piekļuves tiesībām.</p><button class="btn primary" id="provision-btn">+ Izveidot manu datubāzi</button></div>
+        <div id="editor-content" class="editor-content">
+          <div class="workspace-toolbar"><div class="toolbar-left"><span class="status-pill"><span class="pulse-dot"></span><span id="engine-ready-label">SQLite ir gatava</span></span><span class="toolbar-separator">·</span><span class="hint" id="workspace-hint">Dati tiek saglabāti tavā kontā</span></div><div class="toolbar-right"><label class="select-compact">Piemēri <select id="template-select"><option value="">Izvēlies piemēru...</option></select></label><button class="btn ghost" id="clear-editor" title="Notīrīt redaktoru">Notīrīt</button></div></div>
+          <div class="ide-grid"><div class="ide-main"><section class="panel editor-panel"><div class="panel-header"><div><span class="filedot">●</span><strong>query.sql</strong><span class="panel-sub">SQL redaktors</span></div><span class="keyhint">Ctrl / ⌘ + Enter</span></div><div class="editor-wrap"><div class="line-numbers" id="line-numbers">1</div><textarea id="sql-editor" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="SQL kods" placeholder="-- Raksti savu SQL vaicājumu...">-- Raksti savu SQL vaicājumu...</textarea></div><div class="editor-actions"><button id="run-sql" class="btn primary"><span>▶</span> Izpildīt SQL</button><button id="save-workspace" class="btn outline">Saglabāt</button><span class="editor-tip">SQL sintakse atšķiras starp DBVS</span></div></section>
+          <section class="panel result-panel"><div class="panel-header"><div><span class="result-dot">●</span><strong>Rezultāts</strong><span class="panel-sub" id="run-meta">Gaida pirmo vaicājumu</span></div><span id="result-status" class="mini-status">—</span></div><div id="query-output" class="query-output"><div class="empty-results"><div class="empty-icon">⌁</div><h3>Šeit redzēsi rezultātus</h3><p>Uzraksti SQL vaicājumu un nospied “Izpildīt SQL”.</p></div></div></section></div>
+          <aside class="ide-side"><section class="panel explorer-panel"><div class="panel-header"><strong>▦ Tabulas</strong><button id="refresh-tables" class="icon-button" title="Atjaunot tabulas">↻</button></div><div id="tables-list" class="tables-list"><div class="side-muted">Pagaidām nav tabulu</div></div></section><section class="panel history-panel"><div class="panel-header"><strong>◷ Vēsture</strong></div><div id="history-list" class="history-list"><div class="side-muted">Vaicājumu vēl nav</div></div></section><section class="panel learning-panel"><div class="panel-header"><strong>✦ Mācību ieteikums</strong></div><p>Izveido 2 tabulas ar <code>PRIMARY KEY</code> un <code>FOREIGN KEY</code>. Pēc tam mēģini ievietot ierakstu ar neeksistējošu ārējo atslēgu.</p></section></aside></div>
+        </div>
+      </div>
+      <div id="teacher-view" class="teacher-view hidden"><header class="workspace-header"><div><span class="eyebrow">SKOLOTĀJA PANELIS</span><h1>Grupas <span class="h1-muted">pārskats</span></h1><p>Skolēnu darba vides un pēdējie SQL vaicājumi.</p></div><button class="btn outline" id="teacher-refresh">↻ Atjaunot</button></header><div class="stats-row" id="stats-row"></div><div class="teacher-grid"><section class="panel"><div class="panel-header"><strong>Skolēni</strong><span class="panel-sub">Atlasiet skolēnu detalizētai informācijai</span></div><div id="student-list" class="teacher-list"></div></section><section class="panel"><div class="panel-header"><strong>Skolēna aktivitāte</strong></div><div id="student-detail" class="student-detail"><div class="empty-results"><h3>Izvēlies skolēnu</h3><p>Apskati viņa darba vides un SQL pieprasījumus.</p></div></div></section></div></div>
+    </main>
+  </div>
+  <script src="/vendor/sql-wasm.js" defer></script>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
